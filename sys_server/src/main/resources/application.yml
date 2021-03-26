@@ -1,0 +1,36 @@
+spring:
+  datasource: #配置连接数据库
+    #配置druid数据库连接
+    type: com.alibaba.druid.pool.DruidDataSource
+    #数据库连接驱动
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      url: jdbc:mysql://localhost:3306/demo1?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+      username: tongsuh #赋值的时候冒号后面要空格
+      password: qaz321
+      filters: stat
+      maxActive: 20
+      initialSize: 1
+      maxWait: 60000
+      minIdle: 1
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: select 'x'
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxOpenPreparedStatements: 20
+  #热部署，即修改项目不需要重部署整个项目
+#  devtools:
+#    restart:
+#      enabled: true #设置开启热部署
+#      additional-paths: src/main/java #重启目录
+#      exclude: WEB-INF/**
+#  freemarker:
+#    cache: false    #页面不加载缓存，修改即时生效
+
+mybatis-plus:
+    #classpath指src.main.java路径和src.resources
+  #classpath*: 有*表示加载符合要求的所有文件，没有的话只加载第一个符合的
+    mapper-locations: classpath*:/mapper/**Mapper.xml
