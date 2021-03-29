@@ -1,36 +1,33 @@
 spring:
-  datasource: #ÅäÖÃÁ¬½ÓÊı¾İ¿â
-    #ÅäÖÃdruidÊı¾İ¿âÁ¬½Ó
+  datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    #Êı¾İ¿âÁ¬½ÓÇı¶¯
     driver-class-name: com.mysql.cj.jdbc.Driver
-    druid:
-      url: jdbc:mysql://localhost:3306/demo1?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-      username: tongsuh #¸³ÖµµÄÊ±ºòÃ°ºÅºóÃæÒª¿Õ¸ñ
-      password: qaz321
-      filters: stat
-      maxActive: 20
-      initialSize: 1
-      maxWait: 60000
-      minIdle: 1
-      timeBetweenEvictionRunsMillis: 60000
-      minEvictableIdleTimeMillis: 300000
-      validationQuery: select 'x'
-      testWhileIdle: true
-      testOnBorrow: false
-      testOnReturn: false
-      poolPreparedStatements: true
-      maxOpenPreparedStatements: 20
-  #ÈÈ²¿Êğ£¬¼´ĞŞ¸ÄÏîÄ¿²»ĞèÒªÖØ²¿ÊğÕû¸öÏîÄ¿
+    url: jdbc:mysql://localhost:3306/demo1?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: tongsuh
+    password: qaz321
+    #proxy-target-classå±æ€§å€¼å†³å®šæ˜¯åŸºäºJDKæ¥å£è¿˜æ˜¯åŸºäºç±»çš„ä»£ç†è¢«åˆ›å»ºã€‚å¦‚æœä¸ºtrueä»£è¡¨åŸºäºç±»çš„ä»£ç†ï¼Œå¦‚æœä¸ºfalseä»£è¡¨åŸºäºJDKæ¥å£çš„ä»£ç†ã€‚
+  #aop:
+   # proxy-target-class: true
+
+#
 #  devtools:
 #    restart:
-#      enabled: true #ÉèÖÃ¿ªÆôÈÈ²¿Êğ
-#      additional-paths: src/main/java #ÖØÆôÄ¿Â¼
+#      enabled: true
+#      additional-paths: src/main/java
 #      exclude: WEB-INF/**
 #  freemarker:
-#    cache: false    #Ò³Ãæ²»¼ÓÔØ»º´æ£¬ĞŞ¸Ä¼´Ê±ÉúĞ§
+#    cache: false
 
 mybatis-plus:
-    #classpathÖ¸src.main.javaÂ·¾¶ºÍsrc.resources
-  #classpath*: ÓĞ*±íÊ¾¼ÓÔØ·ûºÏÒªÇóµÄËùÓĞÎÄ¼ş£¬Ã»ÓĞµÄ»°Ö»¼ÓÔØµÚÒ»¸ö·ûºÏµÄ
-    mapper-locations: classpath*:/mapper/**Mapper.xml
+  #é…ç½®æ‰«æxml
+  mapper-locations: classpath*:/mapper/**Mapper.xml
+  #é…ç½®å®ä½“æ‰«æç±»
+  type-aliases-package: com.example.server.mapper
+  global-config:
+    db-config:
+      id-type: auto
+
+server:
+  port: 8081
+
+

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.server.mapper.UserMapper">
+    <select id="loadUserByUsername" resultType="com.example.server.bean.User">
+        SELECT * FROM t_user WHERE u_name=#{userName}
+    </select>
+<!--  嵌套数据，ResultMap  -->
+    <select id="getRolesByUid"  resultMap="UserRolesMap">
+        SELECT
+            u.u_id,
+            u.`u_name`,
+            r.r_id,
+            r.`r_name`
+        FROM
+            t_user u,
+            t_role r,
+            t_role_user ru
+        WHERE
+             ru.role_id = r.r_id
+          AND ru.user_id = u.u_id
+          AND u.u_id = #{userId}
+    </select>
+    <!--  嵌套数据，association或者collection中无select  -->
+    <resultMap id="UserRolesMap" type="com.example.server.bean.User">
+        <id column="u_id" property="userId" jdbcType="INTEGER"/>
+        <result column="u_name" property="userName" jdbcType="VARCHAR"/>
+<!--        <result column="password" property="password" jdbcType="VARCHAR"/>-->
+        <collection property="roleList"  javaType="java.util.List" ofType="com.example.server.bean.Role" >
+            <id column="r_id" property="roleId" jdbcType="INTEGER"/>
+            <id column="r_name" property="roleName" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+
+
+    <!--嵌套查询ResultMap-->
+    <select id="getRolesByUserId_1"  resultMap="UserRolesMap_1">
+    SELECT u_id , `u_name`
+    FROM t_user
+    WHERE u_id = #{userId}
+    </select>
+
+    <!--collection嵌套查询-->
+    <resultMap id="UserRolesMap_1" type="com.example.server.bean.User">
+        <id column="u_id" property="userId"/>
+        <result column="u_name" property="userName"/>
+<!--        collection一对多，property是List属性的名字，ofType是List<>中的类型 column是传入的参数-->
+        <!--    select执行的是一个语句-->
+        <collection property="roleList" ofType="com.example.server.bean.Role" column="u_id" select="findRoleListByUserId"/>
+    </resultMap>
+
+<!--    collection plan A-->
+<!--    嵌套查询RoleList select中的三个属性（id resultMap parameterType）都不能少-->
+<!--As后是对应pojo中的属性名  有resultMap指定映射关系时就不用AS去对应属性名了-->
+    <select id="findRoleListByUserId" resultMap="getRoleListByUserIdMap" parameterType="INTEGER">
+        SELECT r.r_id , r.r_name
+        FROM t_role r, t_role_user ru
+        WHERE r.r_id = ru.role_id
+        AND ru.user_id = #{userId}
+    </select>
+
+    <resultMap id="getRoleListByUserIdMap" type="com.example.server.bean.Role">
+        <id column="r_id" property="roleId"/>
+        <result column="r_name" property="roleName"/>
+    </resultMap>
+
+    <!--     collection嵌套查询 plan B-->
+<!--    <select id="findRoleListByUserId" resultType="com.example.server.bean.Role" parameterType="INTEGER">-->
+<!--        SELECT r.r_id AS roleId, r.r_name AS roleName-->
+<!--        FROM t_role r, t_role_user ru-->
+<!--        WHERE r.r_id = ru.role_id-->
+<!--          AND ru.user_id = #{userId}-->
+<!--    </select>-->
+
+
+
+<!--获取所有用户的信息-->
+    <select id="getAllUser" resultMap="getAllUserMap">
+        select * from t_user;
+    </select>
+
+    <resultMap id="getAllUserMap" type="com.example.server.bean.User">
+        <id column="u_id" property="userId"/>
+        <result column="u_name" property="userName"/>
+    </resultMap>
+
+
+</mapper>
